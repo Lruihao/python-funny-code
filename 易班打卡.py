@@ -53,7 +53,7 @@ def lajaDaka():
   r1 = requests.post(login_url, data=login,headers=headers,verify=False)
   if r1.status_code == 200:
     print(time.strftime("%Y:%m:%d:%H:%M", time.localtime()))
-    print(login["username"],"登录成功！")
+    print(login["username"] + " 登录成功！")
     # 拿到登录后的cookie并添加到header中
     header1 = r1.headers
     headers["Cookie"] = header1["Set-Cookie"]
