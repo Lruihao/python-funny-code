@@ -25,8 +25,8 @@ headers = {
 
 
 login = {
-  "username":"201603010223",
-  "password":"052737",
+  "username":"2016xxxxxxxx",
+  "password":"xxxxxx",
   "action":"signin"
 }
 
@@ -36,9 +36,9 @@ daka = {
   "jzdSheng.dm":"430000",
   "jzdShi.dm":"430500",
   "jzdXian.dm":"430527",
-  "jzdDz":"黄桑对河",
-  "jzdDz2":"黄桑对河",
-  "lxdh":"17352623219",
+  "jzdDz":"世外桃源村",
+  "jzdDz2":"世外桃源村",
+  "lxdh":"173xxxx3219",
   "grInd":"0",
   "jcInd":"0",
   "jtqk.dm":"4",
@@ -51,17 +51,25 @@ daka = {
 def lajaDaka():
   # 登录
   r1 = requests.post(login_url, data=login,headers=headers,verify=False)
-  response1=json.dumps(r1.json(),indent=4,ensure_ascii=False) #sort_keys=True 
-  print("登录状态:",r1.status_code)
-  print(response1)
-  header1 = r1.headers
-  headers["Cookie"] = header1["Set-Cookie"]
+  if r1.status_code == 200:
+    print(time.strftime("%Y:%m:%d:%H:%M", time.localtime()))
+    print(login["username"],"登录成功！")
+    # 拿到登录后的cookie并添加到header中
+    header1 = r1.headers
+    headers["Cookie"] = header1["Set-Cookie"]
+  else:
+    return
 
   # 打卡
-  r3 = requests.post(daka_url, data=daka,headers=headers,verify=False)
-  response3=json.dumps(r3.json(),indent=4,ensure_ascii=False)
-  print("打卡状态:",r3.status_code)
-  print(response3)
+  r2 = requests.post(daka_url, data=daka,headers=headers,verify=False)
+  response2=r2.json()
+  if r2.status_code != 200:
+    print("打卡失败！")
+    return
+  if response2["result"] == True:
+    print("打卡成功！")
+  else:
+    print(response2["errorInfoList"][0]["message"])
 
 if __name__=="__main__":
   while True:
